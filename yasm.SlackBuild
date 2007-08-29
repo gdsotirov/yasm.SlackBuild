@@ -4,14 +4,15 @@
 # Written by Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 
-. /etc/slack-package.conf
+. ../slack-package.conf
 
 NAME=yasm
-VERSION=0.5.0
+VERSION=0.6.1
 BUILD=1
 ARCH=${ARCH:-i486}
 
 TMP=${TMP:-/tmp}
+
 cd $TMP
 tar -zxvf $CWD/$NAME-$VERSION.tar.gz
 SRC=$TMP/$NAME-$VERSION
@@ -19,9 +20,13 @@ cd $SRC
 fix_source
 
 CFLAGS=$SLKCFLAGS \
-./configure --build=$ARCH-pc-linux-gnu \
-            --prefix=/usr
-make
+CXXFLAGS=$SLKCFLAGS \
+./configure --build=$ARCH-slackware-linux \
+            --host=$ARCH-slackware-linux \
+            --prefix=/usr \
+	    --mandir=/usr/man
+
+make || exit 1
 
 PKG="$TMP/package-$NAME"
 mkdir -p $PKG
@@ -35,8 +40,9 @@ DOCFILES="$DOCFILES Artistic.txt BSD.txt GNU_*"
 
 mkdir -p $PKG/install
 install -m 644 $CWD/slack-desc $PKG/install/slack-desc
+
 mkdir -p $PKG/usr/src/slackbuilds/$NAME-$VERSION
-install -m 644 $CWD/slack-desc $PKG/usr/src/slackbuilds/$NAME-$VERSION
+install -m 644 $CWD/slack-desc       $PKG/usr/src/slackbuilds/$NAME-$VERSION
 install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION
 
 PKG_DIR=${PKG_DIR:-/tmp}
