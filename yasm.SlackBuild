@@ -1,14 +1,31 @@
 #!/bin/sh
 #
-# SlackBuild for yasm
-# Written by Georgi D. Sotirov <gdsotirov@dir.bg>
+# Slackware build script for yasm
+# Copyright (C) 2006-2011 Georgi D. Sotirov <gdsotirov@dir.bg>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
 # Visit SlackPack at http://sotirov-bg.net/slackpack/
 #
+# $Id: yasm.SlackBuild,v 1.6 2011/12/11 11:58:37 gsotirov Exp $
+#
 
-. ../slack-package.conf
+. ../../slack-package.conf
 
 NAME=yasm
-VERSION=1.1.0
+VERSION=1.2.0
 BUILD=${BUILD:-1}
 ARCH=${ARCH:-i486}
 
@@ -34,7 +51,7 @@ mkdir -p $PKG
 
 # Extract the source
 cd $TMP
-tar -xvf $CWD/$NAME-$VERSION.tar.gz
+tar -xvf $CWD/$NAME-$VERSION.tar.gz || exit 3
 cd $SRC
 fix_source
 
@@ -44,12 +61,13 @@ CPPFLAGS=$SLKCFLAGS \
 ./configure --build=$ARCH-slackware-linux \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
+            --libdir=/usr/lib${LIBDIRSUFFIX} \
             --mandir=/usr/man \
             --enable-python \
-            --enable-python-bindings || exit 1
+            --enable-python-bindings || exit 4
 
-make -j4 || exit 2
-make DESTDIR=$PKG install || exit 3
+make -j4 || exit 5
+make DESTDIR=$PKG install || exit 6
 
 # Prepare
 bin_perms $PKG
@@ -69,6 +87,7 @@ install -m 644 $CWD/slack-required   $PKG/usr/src/slackbuilds/$NAME-$VERSION/sla
 install -m 644 $CWD/slack-suggests   $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-suggests
 install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME.SlackBuild
 
+# Assemble
 PKG_DIR=${PKG_DIR:-/tmp}
 cd $PKG
 PKGNAME=$NAME-$VERSION-$ARCH-$BUILD$MYIN
@@ -77,6 +96,7 @@ cd $PKG_DIR
 md5sum $PKGNAME.txz > $PKGNAME.txz.md5
 cat $PKG/install/slack-desc > $PKG_DIR/$PKGNAME.txt
 
+# Clean up
 if [ "$1" == "--cleanup" ]; then
   rm -r $SRC
   rm -r $PKG
