@@ -19,13 +19,13 @@
 #
 # Visit SlackPack at http://sotirov-bg.net/slackpack/
 #
-# $Id: yasm.SlackBuild,v 1.6 2011/12/11 11:58:37 gsotirov Exp $
+# $Id: yasm.SlackBuild,v 1.6.2.1 2014/08/16 21:24:28 gsotirov Exp $
 #
 
 . ../../slack-package.conf
 
 NAME=yasm
-VERSION=1.2.0
+VERSION=1.1.0
 BUILD=${BUILD:-1}
 ARCH=${ARCH:-i486}
 
@@ -55,6 +55,9 @@ tar -xvf $CWD/$NAME-$VERSION.tar.gz || exit 3
 cd $SRC
 fix_source
 
+# Patch source
+patch -p1 < $CWD/$NAME-$VERSION.diff || exit 31
+
 # Configure, build and install
 CFLAGS=$SLKCFLAGS \
 CPPFLAGS=$SLKCFLAGS \
@@ -82,10 +85,11 @@ install -m 644 $CWD/slack-required $PKG/install/slack-required
 install -m 644 $CWD/slack-suggests $PKG/install/slack-suggests
 
 mkdir -p $PKG/usr/src/slackbuilds/$NAME-$VERSION
-install -m 644 $CWD/slack-desc       $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-desc
-install -m 644 $CWD/slack-required   $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-required
-install -m 644 $CWD/slack-suggests   $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-suggests
-install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME.SlackBuild
+install -m 644 $CWD/slack-desc          $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-desc
+install -m 644 $CWD/slack-required      $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-required
+install -m 644 $CWD/slack-suggests      $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-suggests
+install -m 644 $CWD/$NAME-$VERSION.diff $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME-$VERSION.diff
+install -m 644 $CWD/$NAME.SlackBuild    $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME.SlackBuild
 
 # Assemble
 PKG_DIR=${PKG_DIR:-/tmp}
