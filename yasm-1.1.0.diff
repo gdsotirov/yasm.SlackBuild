@@ -1,0 +1,22 @@
+# Replace __new__ with __cinit__ to avoid compilation error with newer Cython
+diff -urNad yasm-1.1.0-orig/tools/python-yasm/yasm.pyx yasm-1.1.0/tools/python-yasm/yasm.pyx
+--- yasm-1.1.0-orig/tools/python-yasm/yasm.pyx	2010-08-07 19:34:30.000000000 +0300
++++ yasm-1.1.0/tools/python-yasm/yasm.pyx	2014-08-17 00:02:48.000000000 +0300
+@@ -97,7 +97,7 @@
+ #
+ cdef class __assoc_data_callback:
+     cdef yasm_assoc_data_callback *cb
+-    def __new__(self, destroy, print_):
++    def __cinit__(self, destroy, print_):
+         self.cb = <yasm_assoc_data_callback *>malloc(sizeof(yasm_assoc_data_callback))
+         self.cb.destroy = <void (*) (void *)>PyCObject_AsVoidPtr(destroy)
+         #self.cb.print_ = <void (*) (void *, FILE *, int)>PyCObject_AsVoidPtr(print_)
+@@ -107,7 +107,7 @@
+ 
+ cdef class Register:
+     cdef unsigned long reg
+-    def __new__(self, reg):
++    def __cinit__(self, reg):
+         self.reg = reg
+ 
+ include "errwarn.pxi"
