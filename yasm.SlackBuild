@@ -44,6 +44,7 @@ CXXFLAGS="$SLKCFLAGS -fPIC" \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
             --mandir=/usr/man \
+            --libdir=/usr/lib${LIBDIRSUFFIX} \
             --enable-python \
             --enable-python-bindings || exit 1
 
