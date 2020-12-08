@@ -7,5 +7,5 @@ yasm: accepts NASM and GAS assembler syntaxes, outputs binary, ELF32, ELF64,
 yasm: RDOFF2, COFF, Win32, and Win64 object formats, and generates source
 yasm: debugging information in STABS, DWARF 2, and CodeView? 8 formats.
 yasm:
-yasm: Packaged by Georgi D. Sotirov <gdsotirov@dir.bg>
+yasm: Packaged by Georgi D. Sotirov <gdsotirov@gmail.com>
 yasm:
